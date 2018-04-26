@@ -24,6 +24,7 @@ use thanatos\oss\result\PutObjectResult;
 use yii\base\Component;
 use yii\base\Exception;
 use yii\httpclient\Client;
+use yii\validators\UrlValidator;
 
 /**
  * Class Oss
@@ -177,7 +178,8 @@ class Oss extends Component
      */
     public function putObjectOrigin($object, $url, $options = null)
     {
-        if (empty(preg_match('%^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@|\d{1,3}(?:\.\d{1,3}){3}|(?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?(?:[^\s]*)?$%iu', $url))) {
+        $validator = new UrlValidator();
+        if (!$validator->validate($url)) {
             $this->throwError('file is not a url');
         }
         $content = '';
@@ -250,10 +252,10 @@ class Oss extends Component
      * @return bool
      * @throws Exception
      */
-    private function throwError()
+    private function throwError($string)
     {
         if (YII_ENV_DEV) {
-            throw new Exception();
+            throw new Exception($string);
         } else {
             return false;
         }

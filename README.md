@@ -3,7 +3,7 @@
     <h1 align="center">Aliyun Oss Sdk Extension for Yii 2</h1>
     <br>
 </p>
-基于官方[ember-cli](https://github.com/aliyun/aliyun-oss-php-sdk) SDK 封装
+基于官方SDk封装 [overtrue/wechat](https://github.com/aliyun/aliyun-oss-php-sdk)
 
 [![Latest Stable Version](https://poser.pugx.org/thanatosxia/yii2-wechat/v/stable)](https://packagist.org/packages/thanatosxia/yii2-wechat)
 [![Total Downloads](https://poser.pugx.org/thanatosxia/yii2-wechat/downloads)](https://packagist.org/packages/thanatosxia/yii2-wechat)
