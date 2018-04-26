@@ -4,7 +4,7 @@
     <br>
 </p>
 
- based on [overtrue/wechat](https://github.com/overtrue/wechat)  
+ based on [aliyun/aliyun-oss-php-sdk](https://github.com/aliyun/aliyun-oss-php-sdk)  
  
 [![Latest Stable Version](https://poser.pugx.org/thanatosxia/yii2-wechat/v/stable)](https://packagist.org/packages/thanatosxia/yii2-wechat)
 [![Total Downloads](https://poser.pugx.org/thanatosxia/yii2-wechat/downloads)](https://packagist.org/packages/thanatosxia/yii2-wechat)
