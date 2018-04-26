@@ -43,6 +43,10 @@ Yii::$app->oss->putObject($object, $content, $options);
  */
 Yii::$app->oss->deleteObject($object, $options);
 ```
+添加了可以上传远程文件, 可以直接使用，上传远程文件
+```php
+Yii::$app->oss->putObjectOrigin($object, $url, $options);
+```
 说明
 ------
 Oss 类重新分装了官方的类，官方类中一切方法均可使用，在中间加入了单例机制，和规范的返回值。
@@ -61,5 +65,7 @@ Yii::$app->oss->putObject($object, $content, $options);
 Yii::$app->oss->setBucket($bucket);
 Yii::$app->oss->putObject($object, $content, $options);
 ```
+
+
 
 Think you use this package!
