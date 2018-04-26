@@ -4,6 +4,7 @@
     <br>
 </p>
 based on [aliyun/aliyun-oss-php-sdk](https://github.com/aliyun/aliyun-oss-php-sdk)].
+WeChat SDK for yii2 , based on [overtrue/wechat](https://github.com/overtrue/wechat).  
 
 [![Latest Stable Version](https://poser.pugx.org/thanatosxia/yii2-wechat/v/stable)](https://packagist.org/packages/thanatosxia/yii2-wechat)
 [![Total Downloads](https://poser.pugx.org/thanatosxia/yii2-wechat/downloads)](https://packagist.org/packages/thanatosxia/yii2-wechat)
