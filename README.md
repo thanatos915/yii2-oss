@@ -3,7 +3,7 @@
     <h1 align="center">Aliyun Oss Sdk Extension for Yii 2</h1>
     <br>
 </p>
- based on [aliyun/aliyun-oss-php-sdk](https://github.com/aliyun/aliyun-oss-php-sdk).  
+ based on [aliyun](https://github.com/aliyun/aliyun-oss-php-sdk).  
 
 [![Latest Stable Version](https://poser.pugx.org/thanatosxia/yii2-wechat/v/stable)](https://packagist.org/packages/thanatosxia/yii2-wechat)
 [![Total Downloads](https://poser.pugx.org/thanatosxia/yii2-wechat/downloads)](https://packagist.org/packages/thanatosxia/yii2-wechat)
