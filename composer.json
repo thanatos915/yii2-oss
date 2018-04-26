@@ -9,6 +9,7 @@
         }
     ],
     "require": {
+        "yiisoft/yii2": "*",
         "aliyuncs/oss-sdk-php": "~2.0"
     },
     "autoload": {
