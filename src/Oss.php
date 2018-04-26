@@ -30,47 +30,47 @@ use yii\httpclient\Client;
  * @property string $bucket
  * @property OssClient $client
  * @method string getObjectAcl(string $object) see [[OssClient::getObjectAcl]] for more info
- * @method null putObjectAcl(string $object, string $acl) see [[OssClient::putObjectAcl]] for more info
+ * @method PutObjectResult putObjectAcl(string $object, string $acl) see [[OssClient::putObjectAcl]] for more info
  * @method LoggingConfig getBucketLogging(array $options = NULL) see [[OssClient::getBucketLogging]] for more info
- * @method null putBucketLogging(string $targetBucket, string $targetPrefix, array $options = NULL) see [[OssClient::putBucketLogging]] for more info
- * @method null putBucketWebsite(WebsiteConfig $websiteConfig, array $options = NULL) see [[OssClient::putBucketWebsite]] for more info
+ * @method PutObjectResult putBucketLogging(string $targetBucket, string $targetPrefix, array $options = NULL) see [[OssClient::putBucketLogging]] for more info
+ * @method PutObjectResult putBucketWebsite(WebsiteConfig $websiteConfig, array $options = NULL) see [[OssClient::putBucketWebsite]] for more info
  * @method WebsiteConfig getBucketWebsite(array $options = NULL) see [[OssClient::getBucketWebsite]] for more info
- * @method null deleteBucketWebsite(array $options = NULL) see [[OssClient::deleteBucketWebsite]] for more info
- * @method null putBucketCors(CorsConfig $corsConfig, array $options = NULL) see [[OssClient::putBucketCors]] for more info
+ * @method PutObjectResult deleteBucketWebsite(array $options = NULL) see [[OssClient::deleteBucketWebsite]] for more info
+ * @method PutObjectResult putBucketCors(CorsConfig $corsConfig, array $options = NULL) see [[OssClient::putBucketCors]] for more info
  * @method CorsConfig getBucketCors(array $options = NULL) see [[OssClient::getBucketCors]] for more info
- * @method null deleteBucketCors(array $options = NULL) see [[OssClient::deleteBucketCors]] for more info
+ * @method PutObjectResult deleteBucketCors(array $options = NULL) see [[OssClient::deleteBucketCors]] for more info
  * @method null addBucketCname(string $cname, array $options = NULL) see [[OssClient::addBucketCname]] for more info
  * @method CnameConfig getBucketCname(array $options = NULL) see [[OssClient::getBucketCname]] for more info
- * @method null deleteBucketCname(string $cname, array $options = NULL) see [[OssClient::deleteBucketCname]] for more info
+ * @method PutObjectResult deleteBucketCname(string $cname, array $options = NULL) see [[OssClient::deleteBucketCname]] for more info
  * @method LiveChannelInfo putBucketLiveChannel(string $channelName, LiveChannelConfig $channelConfig, array $options = NULL) see [[OssClient::putBucketLiveChannel]] for more info
- * @method null putLiveChannelStatus(string $channelName, string $channelStatus, array $options = NULL) see [[OssClient::putLiveChannelStatus]] for more info
+ * @method PutObjectResult putLiveChannelStatus(string $channelName, string $channelStatus, array $options = NULL) see [[OssClient::putLiveChannelStatus]] for more info
  * @method GetLiveChannelInfo getLiveChannelInfo(string $channelName, array $options = NULL) see [[OssClient::getLiveChannelInfo]] for more info
  * @method GetLiveChannelStatus getLiveChannelStatus(string $channelName, array $options = NULL) see [[OssClient::getLiveChannelStatus]] for more info
  * @method GetLiveChannelHistory getLiveChannelHistory(string $channelName, array $options = NULL) see [[OssClient::getLiveChannelHistory]] for more info
  * @method LiveChannelListInfo listBucketLiveChannels(array $options = NULL) see [[OssClient::listBucketLiveChannels]] for more info
  * @method null postVodPlaylist(string $channelName, string $playlistName, array $setTime) see [[OssClient::postVodPlaylist]] for more info
- * @method null deleteBucketLiveChannel(string $channelName, array $options = NULL) see [[OssClient::deleteBucketLiveChannel]] for more info
+ * @method PutObjectResult deleteBucketLiveChannel(string $channelName, array $options = NULL) see [[OssClient::deleteBucketLiveChannel]] for more info
  * @method string signRtmpUrl(string $channelName, string $timeout = 60, array $options = NULL) see [[OssClient::signRtmpUrl]] for more info
  * @method array optionsObject(string $object, string $origin, string $request_method, string $request_headers, array $options = NULL) see [[OssClient::optionsObject]] for more info
- * @method null putBucketLifecycle(LifecycleConfig $lifecycleConfig, array $options = NULL) see [[OssClient::putBucketLifecycle]] for more info
+ * @method PutObjectResult putBucketLifecycle(LifecycleConfig $lifecycleConfig, array $options = NULL) see [[OssClient::putBucketLifecycle]] for more info
  * @method LifecycleConfig getBucketLifecycle(array $options = NULL) see [[OssClient::getBucketLifecycle]] for more info
- * @method null deleteBucketLifecycle(array $options = NULL) see [[OssClient::deleteBucketLifecycle]] for more info
- * @method ResponseCore putBucketReferer(RefererConfig $refererConfig, array $options = NULL) see [[OssClient::putBucketReferer]] for more info
+ * @method PutObjectResult deleteBucketLifecycle(array $options = NULL) see [[OssClient::deleteBucketLifecycle]] for more info
+ * @method PutObjectResult putBucketReferer(RefererConfig $refererConfig, array $options = NULL) see [[OssClient::putBucketReferer]] for more info
  * @method RefererConfig getBucketReferer(array $options = NULL) see [[OssClient::getBucketReferer]] for more info
- * @method ResponseCore putBucketStorageCapacity(int $storageCapacity, array $options = NULL) see [[OssClient::putBucketStorageCapacity]] for more info
+ * @method PutObjectResult putBucketStorageCapacity(int $storageCapacity, array $options = NULL) see [[OssClient::putBucketStorageCapacity]] for more info
  * @method int getBucketStorageCapacity(array $options = NULL) see [[OssClient::getBucketStorageCapacity]] for more info
  * @method ObjectListInfo listObjects(array $options = NULL) see [[OssClient::listObjects]] for more info
  * @method null createObjectDir(string $object, array $options = NULL) see [[OssClient::createObjectDir]] for more info
- * @method null putObject(string $object, string $content, array $options = NULL) see [[OssClient::putObject]] for more info
- * @method null putSymlink(string $symlink, string $targetObject, array $options = NULL) see [[OssClient::putSymlink]] for more info
+ * @method PutObjectResult putObject(string $object, string $content, array $options = NULL) see [[OssClient::putObject]] for more info
+ * @method PutObjectResult putSymlink(string $symlink, string $targetObject, array $options = NULL) see [[OssClient::putSymlink]] for more info
  * @method null getSymlink(string $symlink) see [[OssClient::getSymlink]] for more info
  * @method null uploadFile(string $object, string $file, array $options = NULL) see [[OssClient::uploadFile]] for more info
  * @method int appendObject(string $object, string $content, int $position, array $options = NULL) see [[OssClient::appendObject]] for more info
  * @method int appendFile(string $object, string $file, int $position, array $options = NULL) see [[OssClient::appendFile]] for more info
  * @method null copyObject(string $fromObject, string $toBucket, string $toObject, array $options = NULL) see [[OssClient::copyObject]] for more info
  * @method array getObjectMeta(string $object, string $options = NULL) see [[OssClient::getObjectMeta]] for more info
- * @method null deleteObject(string $object, array $options = NULL) see [[OssClient::deleteObject]] for more info
- * @method null deleteObjects(string $objects, array $options = null) see [[OssClient::deleteObjects]] for more info
+ * @method PutObjectResult deleteObject(string $object, array $options = NULL) see [[OssClient::deleteObject]] for more info
+ * @method array deleteObjects(string $objects, array $options = null) see [[OssClient::deleteObjects]] for more info
  * @method string getObject(string $object, array $options = NULL) see [[OssClient::getObject]] for more info
  * @method bool doesObjectExist(string $object, array $options = NULL) see [[OssClient::doesObjectExist]] for more info
  * @method null restoreObject(string $object, array $options = NULL) see [[OssClient::restoreObject]] for more info
@@ -232,7 +232,15 @@ class Oss extends Component
     {
         $result = $this->getClient()->$name($this->bucket, ...$params);
         // Put method Results
-        if (strpos($name, 'put') === 0) {
+        if (
+            strpos($name, 'put') === 0 ||
+            strpos($name, 'create') === 0 ||
+            strpos($name, 'delete') === 0 ||
+            $name == 'uploadFile' &&
+            $name != 'deleteObjects' &&
+            $name != 'putBucketLiveChannel' &&
+            is_array($result)
+        ) {
             $result = new PutObjectResult($result);
         }
         return $result;
