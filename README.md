@@ -6,14 +6,15 @@
 
  based on [aliyun/aliyun-oss-php-sdk](https://github.com/aliyun/aliyun-oss-php-sdk)
 
-[![Latest Stable Version](https://poser.pugx.org/thanatosxia/yii2-wechat/v/stable)](https://packagist.org/packages/thanatosxia/yii2-wechat)
-[![Total Downloads](https://poser.pugx.org/thanatosxia/yii2-wechat/downloads)](https://packagist.org/packages/thanatosxia/yii2-wechat)
-[![Latest Unstable Version](https://poser.pugx.org/thanatosxia/yii2-wechat/v/unstable)](https://packagist.org/packages/thanatosxia/yii2-wechat)
+[![Latest Stable Version](https://poser.pugx.org/thanatosxia/yii2-oss/v/stable)](https://packagist.org/packages/thanatosxia/yii2-oss)
+[![Total Downloads](https://poser.pugx.org/thanatosxia/yii2-oss/downloads)](https://packagist.org/packages/thanatosxia/yii2-oss)
+[![Latest Unstable Version](https://poser.pugx.org/thanatosxia/yii2-oss/v/unstable)](https://packagist.org/packages/thanatosxia/yii2-oss)
+
 
 安装
 ------------------
 ```bash
-composer.phar require yiisoft/yii2-httpclient
+composer require thanatosxia/yii2-oss
 ```
 
 使用
