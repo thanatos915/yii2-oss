@@ -243,6 +243,10 @@ class Oss extends Component
             $name != 'putBucketLiveChannel' &&
             is_array($result)
         ) {
+            // filesize
+            $result['size_upload'] = $result['info']['size_upload'];
+            $result['size_download'] = $result['info']['size_download'];
+            $result['etag'] && $result['etag'] = trim($result['etag'], '"');
             $result = new PutObjectResult($result);
         }
         return $result;

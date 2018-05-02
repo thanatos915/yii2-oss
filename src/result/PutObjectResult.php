@@ -12,4 +12,6 @@ use yii\base\Model;
 class PutObjectResult extends Result
 {
     public $etag;
+    public $size_upload;
+    public $size_download;
 }
