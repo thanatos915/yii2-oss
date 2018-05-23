@@ -249,10 +249,6 @@ class Oss extends Component
             $result['etag'] && $result['etag'] = trim($result['etag'], '"');
             $result = new PutObjectResult($result);
         }
-        // 处理JSON的返回值 (获取图片宽高时返回)
-        if (is_string($result)) {
-            $result = json_decode($result, true);
-        }
         return $result;
     }
 
