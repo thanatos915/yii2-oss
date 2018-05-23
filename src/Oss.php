@@ -23,6 +23,7 @@ use OSS\OssClient;
 use thanatos\oss\result\PutObjectResult;
 use yii\base\Component;
 use yii\base\Exception;
+use yii\helpers\Json;
 use yii\httpclient\Client;
 use yii\validators\UrlValidator;
 
@@ -198,6 +199,27 @@ class Oss extends Component
     }
 
 
+    /**
+     * 获取OSS Object 的宽高信息
+     * @param string $object OSS Object 路径
+     * @return bool|array
+     * @author thanatos <thanatos915@163.com>
+     */
+    public function getObjectSize($object)
+    {
+        try {
+            $result = $this->getObject($object , [OssClient::OSS_PROCESS => 'image/info']);
+            $result = Json::decode($result);
+            $width = $result['ImageWidth']['value'];
+            $height = $result['ImageHeight']['value'];
+            if ($width && $height) {
+                return ['width' => $width, 'height' => $height];
+            }
+        } catch (\Throwable $e) {
+            return [];
+        }
+
+    }
 
     /**
      * @param string $name
