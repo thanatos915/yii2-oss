@@ -173,7 +173,7 @@ class Oss extends Component
      * @param string $object objcet名称
      * @param string $content 上传的内容
      * @param array $options
-     * @return null
+     * @return PutObjectResult
      * @link https://github.com/yiisoft/yii2-httpclient
      */
     public function putObjectOrigin($object, $url, $options = null)
@@ -198,7 +198,7 @@ class Oss extends Component
     }
 
 
-    
+
     /**
      * @param string $name
      * @param array $params
@@ -248,6 +248,10 @@ class Oss extends Component
             $result['size_download'] = $result['info']['size_download'];
             $result['etag'] && $result['etag'] = trim($result['etag'], '"');
             $result = new PutObjectResult($result);
+        }
+        // 处理JSON的返回值 (获取图片宽高时返回)
+        if (is_string($result)) {
+            $result = json_decode($result, true);
         }
         return $result;
     }
