@@ -18,6 +18,8 @@ class Result extends Model
     public $x_oss_request_id;
     /** @var string 资源URL */
     public $oss_request_url;
+    /** @var integer 文件大小 */
+    public $download_content_length;
 
     public function __set($name, $value)
     {

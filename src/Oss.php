@@ -69,8 +69,7 @@ use yii\validators\UrlValidator;
  * @method null uploadFile(string $object, string $file, array $options = NULL) see [[OssClient::uploadFile]] for more info
  * @method int appendObject(string $object, string $content, int $position, array $options = NULL) see [[OssClient::appendObject]] for more info
  * @method int appendFile(string $object, string $file, int $position, array $options = NULL) see [[OssClient::appendFile]] for more info
- * @method null copyObject(string $fromObject, string $toBucket, string $toObject, array $options = NULL) see [[OssClient::copyObject]] for more info
- * @method array getObjectMeta(string $object, string $options = NULL) see [[OssClient::getObjectMeta]] for more info
+ * @method array|PutObjectResult getObjectMeta(string $object, string $options = NULL) see [[OssClient::getObjectMeta]] for more info
  * @method PutObjectResult deleteObject(string $object, array $options = NULL) see [[OssClient::deleteObject]] for more info
  * @method array deleteObjects(string $objects, array $options = null) see [[OssClient::deleteObjects]] for more info
  * @method string getObject(string $object, array $options = NULL) see [[OssClient::getObject]] for more info
@@ -101,6 +100,32 @@ class Oss extends Component
 
     /** @var string Endpoint */
     public $endpoint;
+
+    /** @var string OSS上传回调Url */
+    public $callbackUrl;
+
+    /** @var bool 是否启用HTTPS */
+    public $useSLL = true;
+
+    /** @var bool 是否启用上传回调 */
+    public $enableCallback = true;
+
+    /** @var array oss回调的自定义参数 */
+    public $callbackParams = [];
+
+    /** @var array oss回调的默认参数 */
+    public $defaultCallbackParams = [
+        'filename' => 'object',
+        'etag',
+        'size',
+        'mimeType',
+        'height' => 'imageInfo.height',
+        'width' => 'imageInfo.width',
+        'format' => 'imageInfo.format',
+    ];
+
+    /** @var string 回调时格式 */
+    public $callbackBodyType = 'application/x-www-form-urlencoded';
 
     /** @var string bucket */
     private $_bucket;
@@ -222,6 +247,76 @@ class Oss extends Component
     }
 
     /**
+     * 获取OSS JS 的签名
+     * @param int $expire
+     * @return string
+     * @author thanatos <thanatos915@163.com>
+     */
+    public function getSignature($dir = 'uploads', $expire = 2592000)
+    {
+        $now = time();
+        $end = $now + $expire;
+        $expiration = $this->gmt_iso8601($end);
+        $dir .= '/';
+
+        if ($this->enableCallback) {
+            $callback_param = array('callbackUrl'=>$this->callbackUrl,
+                'callbackBody'=> $this->generateCallbackBody(),
+                'callbackBodyType'=> $this->callbackBodyType);
+            $callback_string = json_encode($callback_param);
+
+            $base64_callback_body = base64_encode($callback_string);
+        }
+
+        //最大文件大小.用户可以自己设置
+        $condition = array(0=>'content-length-range', 1=>0, 2=> $expire);
+        $conditions[] = $condition;
+
+        //表示用户上传的数据,必须是以$dir开始, 不然上传会失败,这一步不是必须项,只是为了安全起见,防止用户通过policy上传到别人的目录
+        $start = array(0=> 'starts-with', 1=> '$key', 2=> $dir);
+        $conditions[] = $start;
+
+
+        $arr = array('expiration'=>$expiration,'conditions'=>$conditions);
+
+        $policy = json_encode($arr);
+        $base64_policy = base64_encode($policy);
+        $string_to_sign = $base64_policy;
+        $signature = base64_encode(hash_hmac('sha1', $string_to_sign, $this->accessKeySecret, true));
+
+        $response = array();
+        $response['accessid'] = $this->accessKeyId;
+        $response['host'] = ($this->useSLL ? 'https' : 'http') . '://' . $this->bucket. '.' . $this->endpoint;
+        $response['policy'] = $base64_policy;
+        $response['signature'] = $signature;
+        $response['expire'] = $end;
+        if ($this->enableCallback) {
+            $response['callback'] = $base64_callback_body;
+        }
+        //这个参数是设置用户上传指定的前缀
+        $response['dir'] = $dir;
+        return $response;
+    }
+
+    /**
+     * 拷贝一个在OSS上已经存在的object成另外一个object
+     *
+     * @param string $fromObject 源object名称
+     * @param string $toObject 目标object名称
+     * @param array $options
+     * @author thanatos <thanatos915@163.com>
+     */
+    public function copyObject($fromObject, $toObject, $options = null)
+    {
+        try {
+            $result = $this->getClient()->copyObject($this->bucket, $fromObject, $this->bucket, $toObject, $options);
+            return true;
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
      * @param string $name
      * @param array $params
      * @return bool|mixed
@@ -254,18 +349,21 @@ class Oss extends Component
      */
     private function callClientFunc($name, $params)
     {
+
         $result = $this->getClient()->$name($this->bucket, ...$params);
         // Put method Results
         if (
-            strpos($name, 'put') === 0 ||
+            (strpos($name, 'put') === 0 ||
             strpos($name, 'create') === 0 ||
             strpos($name, 'delete') === 0 ||
-            $name == 'uploadFile' &&
+            $name == 'uploadFile' ||
+            $name == 'getObjectMeta') &&
             $name != 'deleteObjects' &&
             $name != 'putBucketLiveChannel' &&
             is_array($result)
         ) {
             // filesize
+            $result['download_content_length'] = $result['info']['download_content_length'];
             $result['size_upload'] = $result['info']['size_upload'];
             $result['size_download'] = $result['info']['size_download'];
             $result['etag'] && $result['etag'] = trim($result['etag'], '"');
@@ -285,6 +383,39 @@ class Oss extends Component
         } else {
             return false;
         }
+    }
+
+    private function gmt_iso8601($time) {
+        $dtStr = date("c", $time);
+        $mydatetime = new \DateTime($dtStr);
+        $expiration = $mydatetime->format(\DateTime::ISO8601);
+        $pos = strpos($expiration, '+');
+        $expiration = substr($expiration, 0, $pos);
+        return $expiration."Z";
+    }
+
+    /**
+     * @return string
+     * @author thanatos <thanatos915@163.com>
+     * @internal
+     */
+    private function generateCallbackBody()
+    {
+        // 默认参数
+        $str = '';
+        foreach ($this->defaultCallbackParams as $key => $item) {
+            if (is_string($key)) {
+                $str .= '&' . $key . '=${' . $item . '}';
+            } else {
+                $str .= '&' . $item . '=${' . $item . '}';
+            }
+        }
+
+        // 自定义参数
+        foreach ($this->callbackParams as $key => $item) {
+            $str .= '&' . $item . '=${x:' . $item . '}';
+        }
+        return trim($str, '&');
     }
 
 }
