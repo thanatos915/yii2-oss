@@ -50,6 +50,27 @@ Yii::$app->oss->deleteObject($object, $options);
 ```php
 Yii::$app->oss->putObjectOrigin($object, $url, $options);
 ```
+在WEB上传，php回调处理文件
+```php
+// 配置文件中增加一下选项
+'oss' => [
+    'accessKeyId' => 'xxxx',
+    'accessKeySecret' => 'xxxx',
+    'endpoint' => 'xxx',
+    'bucket' => '',
+    'callbackUrl' => '上传成功OSS请求的路径',
+    // 自定义的上传回掉的参数
+    'callbackParams' => [
+        'user_id',
+        'method',
+        'folder_id'
+    ]
+],
+
+// 获取OSS 签名 (dir 是允许前端上传的目录前缀)
+return Yii::$app->oss->getSignature($dir);
+```
+
 说明
 ------
 Oss 类重新分装了官方的类，官方类中一切方法均可使用，在中间加入了单例机制，和规范的返回值。
