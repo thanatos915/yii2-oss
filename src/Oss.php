@@ -312,7 +312,28 @@ class Oss extends Component
             $result = $this->getClient()->copyObject($this->bucket, $fromObject, $this->bucket, $toObject, $options);
             return true;
         } catch (\Throwable $e) {
-            return false;
+            return $e;
+        }
+    }
+
+    /**
+     * 移动oss文件
+     * @param string $fromObject 源object名称
+     * @param string $toObject 目标object名称
+     * @param array $options
+     * @author thanatos <thanatos915@163.com>
+     */
+    public function moveObject($fromObject, $toObject, $options = null)
+    {
+        try {
+            $result = $this->copyObject($fromObject, $toObject, $options);
+            if ($result && $this->deleteObject($fromObject, $options)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Throwable $e) {
+            return $e;
         }
     }
 
