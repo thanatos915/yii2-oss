@@ -231,7 +231,7 @@ class Oss extends Component
             }
         }
         if (empty($content)) {
-            throw  new Exception('File not exist');
+            $this->throwError('File not exist');
         }
         return $this->putObject($object, $content, $options);
     }
