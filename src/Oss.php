@@ -205,20 +205,33 @@ class Oss extends Component
     public function putObjectOrigin($object, $url, $options = null)
     {
         $validator = new UrlValidator();
-        if (!$validator->validate($url)) {
-            $this->throwError('file is not a url');
-        }
-        $content = '';
-        if (class_exists('yii\httpclient\Client')) {
-            $client = new Client(['transport' => 'yii\httpclient\CurlTransport']);
-            $response = $client->createRequest()
-                ->setMethod('GET')->setUrl($url)->send();
-            if (!$response->isOk) {
-                return $this->throwError('file is not exist');
+
+        if ($validator->validate($url)) {
+            $content = '';
+            if (class_exists('yii\httpclient\Client')) {
+                $client = new Client(['transport' => 'yii\httpclient\CurlTransport']);
+                $response = $client->createRequest()
+                    ->setMethod('GET')->setUrl($url)->send();
+                if (!$response->isOk) {
+                    return $this->throwError('file is not exist');
+                }
+                $content = $response->content;
+            } else {
+                $content = file_get_contents($url);
             }
-            $content = $response->content;
         } else {
-            $content = file_get_contents($url);
+            try {
+                $ossObject = $this->getObject($object);
+            } catch (\Throwable $e) {
+                $ossObject = null;
+            }
+            if ($ossObject) {
+                $content = $ossObject;
+                unset($ossObject);
+            }
+        }
+        if (empty($content)) {
+            throw  new Exception('File not exist');
         }
         return $this->putObject($object, $content, $options);
     }
@@ -233,7 +246,7 @@ class Oss extends Component
     public function getObjectSize($object)
     {
         try {
-            $result = $this->getObject($object , [OssClient::OSS_PROCESS => 'image/info']);
+            $result = $this->getObject($object, [OssClient::OSS_PROCESS => 'image/info']);
             $result = Json::decode($result);
             $width = $result['ImageWidth']['value'];
             $height = $result['ImageHeight']['value'];
@@ -260,24 +273,24 @@ class Oss extends Component
         $dir .= '/';
 
         if ($this->enableCallback) {
-            $callback_param = array('callbackUrl'=>$this->callbackUrl,
-                'callbackBody'=> $this->generateCallbackBody(),
-                'callbackBodyType'=> $this->callbackBodyType);
+            $callback_param = array('callbackUrl' => $this->callbackUrl,
+                'callbackBody' => $this->generateCallbackBody(),
+                'callbackBodyType' => $this->callbackBodyType);
             $callback_string = json_encode($callback_param);
 
             $base64_callback_body = base64_encode($callback_string);
         }
 
         //最大文件大小.用户可以自己设置
-        $condition = array(0=>'content-length-range', 1=>0, 2=> $expire);
+        $condition = array(0 => 'content-length-range', 1 => 0, 2 => $expire);
         $conditions[] = $condition;
 
         //表示用户上传的数据,必须是以$dir开始, 不然上传会失败,这一步不是必须项,只是为了安全起见,防止用户通过policy上传到别人的目录
-        $start = array(0=> 'starts-with', 1=> '$key', 2=> $dir);
+        $start = array(0 => 'starts-with', 1 => '$key', 2 => $dir);
         $conditions[] = $start;
 
 
-        $arr = array('expiration'=>$expiration,'conditions'=>$conditions);
+        $arr = array('expiration' => $expiration, 'conditions' => $conditions);
 
         $policy = json_encode($arr);
         $base64_policy = base64_encode($policy);
@@ -286,7 +299,7 @@ class Oss extends Component
 
         $response = array();
         $response['accessid'] = $this->accessKeyId;
-        $response['host'] = ($this->useSLL ? 'https' : 'http') . '://' . $this->bucket. '.' . $this->endpoint;
+        $response['host'] = ($this->useSLL ? 'https' : 'http') . '://' . $this->bucket . '.' . $this->endpoint;
         $response['policy'] = $base64_policy;
         $response['signature'] = $signature;
         $response['expire'] = $end;
@@ -375,10 +388,10 @@ class Oss extends Component
         // Put method Results
         if (
             (strpos($name, 'put') === 0 ||
-            strpos($name, 'create') === 0 ||
-            strpos($name, 'delete') === 0 ||
-            $name == 'uploadFile' ||
-            $name == 'getObjectMeta') &&
+                strpos($name, 'create') === 0 ||
+                strpos($name, 'delete') === 0 ||
+                $name == 'uploadFile' ||
+                $name == 'getObjectMeta') &&
             $name != 'deleteObjects' &&
             $name != 'putBucketLiveChannel' &&
             is_array($result)
@@ -406,13 +419,14 @@ class Oss extends Component
         }
     }
 
-    private function gmt_iso8601($time) {
+    private function gmt_iso8601($time)
+    {
         $dtStr = date("c", $time);
         $mydatetime = new \DateTime($dtStr);
         $expiration = $mydatetime->format(\DateTime::ISO8601);
         $pos = strpos($expiration, '+');
         $expiration = substr($expiration, 0, $pos);
-        return $expiration."Z";
+        return $expiration . "Z";
     }
 
     /**
