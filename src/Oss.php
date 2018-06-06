@@ -5,6 +5,7 @@
 
 namespace thanatos\oss;
 
+use OSS\Core\OssException;
 use OSS\Http\ResponseCore;
 use OSS\Model\CorsConfig;
 use OSS\Model\GetLiveChannelHistory;
@@ -220,11 +221,7 @@ class Oss extends Component
                 $content = file_get_contents($url);
             }
         } else {
-            try {
-                $ossObject = $this->getObject($object);
-            } catch (\Throwable $e) {
-                $ossObject = null;
-            }
+            $ossObject = $this->getObject($url);
             if ($ossObject) {
                 $content = $ossObject;
                 unset($ossObject);
@@ -366,7 +363,7 @@ class Oss extends Component
             }
             try {
                 return $this->callClientFunc($name, $params);
-            } catch (\Throwable $throwable) {
+            } catch (\Exception $throwable) {
                 return false;
             }
 
