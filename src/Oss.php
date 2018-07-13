@@ -102,6 +102,9 @@ class Oss extends Component
     /** @var string Endpoint */
     public $endpoint;
 
+    /** @var string 内网的地址 */
+    public $endpointInternal;
+
     /** @var string OSS上传回调Url */
     public $callbackUrl;
 
@@ -178,7 +181,7 @@ class Oss extends Component
     public function getClient()
     {
         if ($this->_client === null) {
-            $this->_client = new OssClient($this->accessKeyId, $this->accessKeySecret, $this->endpoint);
+            $this->_client = new OssClient($this->accessKeyId, $this->accessKeySecret, $this->endpointInternal);
         }
         return $this->_client;
     }
