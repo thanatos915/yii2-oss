@@ -199,7 +199,6 @@ class Oss extends Component
 
     /**
      * 上传远程URL的文件
-     *
      * @param string $object objcet名称
      * @param string $content 上传的内容
      * @param array $options
@@ -223,17 +222,13 @@ class Oss extends Component
             } else {
                 $content = file_get_contents($url);
             }
-        } else {
-            $ossObject = $this->getObject($url);
-            if ($ossObject) {
-                $content = $ossObject;
-                unset($ossObject);
+            if (empty($content)) {
+                $this->throwError('File not exist');
             }
+            return $this->putObject($object, $content, $options);
+        } else {
+            return $this->copyObject($url, $content);
         }
-        if (empty($content)) {
-            $this->throwError('File not exist');
-        }
-        return $this->putObject($object, $content, $options);
     }
 
 
@@ -346,7 +341,7 @@ class Oss extends Component
                 return false;
             }
         } catch (\Throwable $e) {
-            return $e;
+            return $false;
         }
     }
 
