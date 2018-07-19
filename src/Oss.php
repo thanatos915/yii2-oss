@@ -227,7 +227,7 @@ class Oss extends Component
             }
             return $this->putObject($object, $content, $options);
         } else {
-            return $this->copyObject($url, $content);
+            return $this->copyObject($url, $object);
         }
     }
 
