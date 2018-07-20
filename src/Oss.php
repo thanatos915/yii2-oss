@@ -320,7 +320,13 @@ class Oss extends Component
     public function copyObject($fromObject, $toObject, $options = null)
     {
         try {
-            return $this->getClient()->copyObject($this->bucket, $fromObject, $this->bucket, $toObject, $options);
+            $result = $this->getClient()->copyObject($this->bucket, $fromObject, $this->bucket, $toObject, $options);
+            // filesize
+            $result['download_content_length'] = $result['info']['download_content_length'];
+            $result['size_upload'] = $result['info']['size_upload'];
+            $result['size_download'] = $result['info']['size_download'];
+            $result['etag'] && $result['etag'] = trim($result['etag'], '"');
+            $result = new PutObjectResult($result);
         } catch (\Throwable $e) {
             return $e;
         }
