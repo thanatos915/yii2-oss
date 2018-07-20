@@ -317,8 +317,7 @@ class Oss extends Component
     public function copyObject($fromObject, $toObject, $options = null)
     {
         try {
-            $result = $this->getClient()->copyObject($this->bucket, $fromObject, $this->bucket, $toObject, $options);
-            return true;
+            return $this->getClient()->copyObject($this->bucket, $fromObject, $this->bucket, $toObject, $options);
         } catch (\Throwable $e) {
             return $e;
         }
