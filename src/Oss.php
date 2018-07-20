@@ -142,6 +142,9 @@ class Oss extends Component
         if (empty($this->endpoint) || !is_string($this->endpoint)) {
             throw new Exception('endpont is empty');
         }
+        if (empty($this->endpointInternal) || !is_string($this->endpointInternal)) {
+            throw new Exception('endpont is empty');
+        }
         if (empty($this->accessKeySecret) || !is_string($this->accessKeySecret)) {
             throw new Exception('accessKeySecret is empty');
         }
