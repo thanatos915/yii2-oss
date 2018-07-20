@@ -327,6 +327,7 @@ class Oss extends Component
             $result['size_download'] = $result['info']['size_download'];
             $result['etag'] && $result['etag'] = trim($result['etag'], '"');
             $result = new PutObjectResult($result);
+            return $result;
         } catch (\Throwable $e) {
             return $e;
         }
