@@ -258,12 +258,19 @@ class Oss extends Component
     }
 
     /**
-     * 获取OSS JS 的签名
      * @param int $expire
      * @return string
      * @author thanatos <thanatos915@163.com>
      */
-    public function getSignature($dir = 'uploads', $expire = 2592000)
+    /**
+     * 获取OSS JS 的签名
+     * @param string $dir
+     * @param int $maxSize 最大文件大小 默认 20M
+     * @param int $expire 过期时间
+     * @return array
+     * @author thanatos <thanatos915@163.com>
+     */
+    public function getSignature($dir = 'uploads', $maxSize = 2097150, $expire = 2592000)
     {
         $now = time();
         $end = $now + $expire;
@@ -280,7 +287,7 @@ class Oss extends Component
         }
 
         //最大文件大小.用户可以自己设置
-        $condition = array(0 => 'content-length-range', 1 => 0, 2 => $expire);
+        $condition = array(0 => 'content-length-range', 1 => 0, 2 => $maxSize);
         $conditions[] = $condition;
 
         //表示用户上传的数据,必须是以$dir开始, 不然上传会失败,这一步不是必须项,只是为了安全起见,防止用户通过policy上传到别人的目录
